@@ -277,9 +277,13 @@ int YoloV7::detect(const cv::Mat &rgb, std::vector<Object> &objects, float prob_
 
     int count = picked.size();
 
-    objects.resize(count);
-    for (int i = 0; i < count; i++) {
-        objects[i] = proposals[picked[i]];
+    //objects.resize(count);
+    int i=0;
+    for (int j = 0; j < count; j++) {
+        if (proposals[picked[j]].label!=0)
+            continue;
+        
+        objects.push_back(proposals[picked[j]]);
 
         // adjust offset to original unpadded
         float x0 = (objects[i].rect.x - (wpad / 2)) / scale;
@@ -297,6 +301,7 @@ int YoloV7::detect(const cv::Mat &rgb, std::vector<Object> &objects, float prob_
         objects[i].rect.y = y0;
         objects[i].rect.width = x1 - x0;
         objects[i].rect.height = y1 - y0;
+        i++;
     }
 
     return 0;

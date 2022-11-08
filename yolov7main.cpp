@@ -29,7 +29,7 @@ int target_size = 640;
 
 int main(int argc, char** argv)
 {
-    const char* imagepath = argv[1];
+    char* imagepath = argv[1];
 
     if (argc != 2)
     {
@@ -39,7 +39,11 @@ int main(int argc, char** argv)
 
     yolov7.load(target_size);
 
+
+
     cv::Mat m = cv::imread(imagepath, 1);
+    cv::rotate(m, m, cv::ROTATE_90_CLOCKWISE);
+
     if (m.empty())
     {
         fprintf(stderr, "cv::imread %s failed\n", imagepath);
@@ -50,9 +54,10 @@ int main(int argc, char** argv)
     yolov7.detect(m, objects);
     yolov7.draw(m, objects);
 
-    cv::imshow("RPi4 - 1.95 GHz - 2 GB ram",m);
-//    cv::imwrite("test.jpg",m);
-    cv::waitKey(0);
-
-    return 0;
+    //cv::imshow("RPi4 - 1.95 GHz - 2 GB ram",m);
+    cv::imwrite("test.jpg",m);
+    
+    //cv::waitKey(0);
+    printf("%d\n",objects.size());
+    return objects.size();
 }
